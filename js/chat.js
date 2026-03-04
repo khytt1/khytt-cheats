@@ -35,7 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Function to actually fetch and render the messages from Cloudflare
         const syncMessages = async () => {
             try {
-                const response = await fetch(CHAT_API);
+                // Cloudflare caches GET requests very aggressively. 
+                // We add a random timestamp to the URL to force it to grab fresh data every time.
+                const response = await fetch(`${CHAT_API}?t=${Date.now()}`);
                 if (!response.ok) throw new Error("API Offline");
 
                 const msgs = await response.json();
