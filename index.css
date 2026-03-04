@@ -730,12 +730,29 @@ body {
 .review-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
 }
 
+.reviewer-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.review-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+    /* Slight rounding for a sleek look */
+    object-fit: contain;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 2px;
+}
+
 .reviewer {
-    font-weight: bold;
-    color: var(--text);
+    font-weight: 700;
+    color: var(--primary);
 }
 
 .stars {
