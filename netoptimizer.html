@@ -134,6 +134,7 @@
                 <h3 style="margin-bottom: 15px;">Download Tool</h3>
                 <p style="color: var(--text-dim); margin-bottom: 25px;">Get the latest standalone version of Khytt
                     NetOptimizer.</p>
+
                 <a href="https://mega.nz/folder/bqpFWIjS#5JtpDg2k61HFJXB6v6xPqw" class="btn-glow"
                     style="display: block; text-align: center;" target="_blank">Download Now</a>
                 <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 15px; text-align: center;">Signed by:
@@ -143,10 +144,39 @@
     </div>
 
     <footer class="glass-footer">
+        <div class="footer-content">
+            <div class="footer-logo">KHYTT<span>CHEATS</span></div>
+            <p>The ultimate destination for game enhancements.</p>
+            <div class="social-links">
+                <a href="https://discord.gg/PzsTmrVvmB" target="_blank">Discord</a>
+                <a href="https://github.com/khytt1" target="_blank">GitHub</a>
+                <a href="#" id="supportBtn">Support</a>
+            </div>
+        </div>
         <div class="footer-bottom">
             &copy; 2026 Khytt Cheats. All rights reserved.
         </div>
     </footer>
+
+    <!-- Support Modal -->
+    <div class="modal-overlay" id="supportModal">
+        <div class="modal-content glass">
+            <span class="modal-close" id="closeModal">&times;</span>
+            <form class="support-form" id="supportForm">
+                <h2>Contact Support</h2>
+                <div class="form-group">
+                    <label for="supportName">Your Name/Discord Tag</label>
+                    <input type="text" id="supportName" required placeholder="e.g. Khytt#1234">
+                </div>
+                <div class="form-group">
+                    <label for="supportMessage">Message</label>
+                    <textarea id="supportMessage" required placeholder="How can we help you?"></textarea>
+                </div>
+                <button type="submit" class="submit-btn" id="submitSupportBtn">Send Message</button>
+                <div id="supportStatus" class="form-status"></div>
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>
