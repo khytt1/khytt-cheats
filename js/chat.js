@@ -23,21 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        const q = query(collection(db, "messages"), orderBy("createdAt", "desc"), limit(50));
+        const q = query(collection(db, "messages"), limit(50));
 
         onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
             // Rebuild the whole list smoothly
             const msgs = [];
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                // If it's a local write, createdAt might be null temporarily.
-                // Give it a fake timestamp in the future so it drops to the bottom of the chat.
-                const timeStr = data.createdAt ? data.createdAt.toMillis() : Date.now() + 10000;
-                msgs.push({ time: timeStr, ...data, id: doc.id });
+                msgs.push({ id: doc.id, ...data });
             });
 
-            // Sort from oldest to newest based on the timestamp we just ensured exists
-            msgs.sort((a, b) => a.time - b.time);
+            // Reversing displays oldest messages at the top, newest at bottom
+            msgs.reverse();
 
             chatMessages.innerHTML = '';
             msgs.forEach(msg => {
