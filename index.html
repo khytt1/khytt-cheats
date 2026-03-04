@@ -27,18 +27,19 @@
 
         gtag('config', 'G-QZHNPC5EK9');
     </script>
+    <script type="module" src="js/firebase-config.js"></script>
 </head>
 
 <body>
-    <div class="mesh-bg"></div>
+    <canvas id="particleCanvas" class="mesh-bg"></canvas>
 
     <nav class="glass-nav">
         <div class="logo">KHYTT<span>CHEATS</span></div>
         <ul class="nav-links">
-            <li><a href="#features">Features</a></li>
             <li><a href="#status">Status</a></li>
             <li><a href="#products">Products</a></li>
-            <li><a href="https://discord.gg/PzsTmrVvmB" class="btn-primary" target="_blank">Join Discord</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="login.html" id="navLoginLink" class="btn-primary">Log In</a></li>
         </ul>
     </nav>
 
@@ -82,6 +83,23 @@
             <div class="status-card glass">
                 <span class="cheat-name">NetOptimizer</span>
                 <span class="cheat-status updated">UPDATED</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="stats" class="stats-section">
+        <div class="stats-container reveal">
+            <div class="stat-box glass">
+                <h3 class="stat-number" data-target="15924">0</h3>
+                <p>Total Downloads</p>
+            </div>
+            <div class="stat-box glass">
+                <h3 class="stat-number" data-target="1402">0</h3>
+                <p>Active Users</p>
+            </div>
+            <div class="stat-box glass">
+                <h3 class="stat-number" data-target="365">0</h3>
+                <p>Days Undetected</p>
             </div>
         </div>
     </section>
@@ -137,6 +155,60 @@
                 </ul>
                 <a href="netoptimizer.html" class="btn-buy"
                     style="text-decoration: none; display: block; text-align: center;">View Details</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" class="reviews-section reveal">
+        <h2 class="section-title">Community <span>Feedback</span></h2>
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <!-- Review Cards -->
+                <div class="review-card glass">
+                    <div class="review-header">
+                        <span class="reviewer">GhostHunter99</span>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                    <p>"Been using the CS2 cheat for months. Absolutely zero issues and movement is buttery smooth."</p>
+                </div>
+                <div class="review-card glass">
+                    <div class="review-header">
+                        <span class="reviewer">xX_Sniper_Xx</span>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                    <p>"NetOptimizer literally dropped my ping by 15ms. I thought it was snake oil but it actually
+                        works."</p>
+                </div>
+                <div class="review-card glass">
+                    <div class="review-header">
+                        <span class="reviewer">ValkyrieMain</span>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                    <p>"The ESP on R6S is the cleanest I've ever seen. No stuttering at all."</p>
+                </div>
+                <div class="review-card glass">
+                    <div class="review-header">
+                        <span class="reviewer">TacticalNuke</span>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                    <p>"Support team is goated. Helped me set up the driver bypass in 5 mins."</p>
+                </div>
+                <!-- Duplicate for seamless looping -->
+                <div class="review-card glass">
+                    <div class="review-header">
+                        <span class="reviewer">GhostHunter99</span>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                    <p>"Been using the CS2 cheat for months. Absolutely zero issues and movement is buttery smooth."</p>
+                </div>
+                <div class="review-card glass">
+                    <div class="review-header">
+                        <span class="reviewer">xX_Sniper_Xx</span>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                    <p>"NetOptimizer literally dropped my ping by 15ms. I thought it was snake oil but it actually
+                        works."</p>
+                </div>
             </div>
         </div>
     </section>

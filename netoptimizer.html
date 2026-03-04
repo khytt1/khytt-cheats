@@ -27,6 +27,7 @@
 
         gtag('config', 'G-QZHNPC5EK9');
     </script>
+    <script type="module" src="js/firebase-config.js"></script>
     <style>
         .detail-header {
             padding: 150px 10% 50px;
@@ -87,7 +88,7 @@
 </head>
 
 <body>
-    <div class="mesh-bg"></div>
+    <canvas id="particleCanvas" class="mesh-bg"></canvas>
 
     <nav class="glass-nav">
         <div class="logo">KHYTT<span>CHEATS</span></div>
@@ -95,7 +96,8 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="index.html#status">Status</a></li>
             <li><a href="index.html#products">Products</a></li>
-            <li><a href="https://discord.gg/PzsTmrVvmB" class="btn-primary" target="_blank">Join Discord</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="login.html" id="navLoginLink" class="btn-primary">Log In</a></li>
         </ul>
     </nav>
 

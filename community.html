@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community | Khytt Cheats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="index.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZHNPC5EK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-QZHNPC5EK9');
+    </script>
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/chat.js"></script>
+</head>
+
+<body>
+    <canvas id="particleCanvas" class="mesh-bg"></canvas>
+
+    <nav class="glass-nav">
+        <div class="logo"><a href="index.html" style="color:white;text-decoration:none;">KHYTT<span>CHEATS</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html#status">Status</a></li>
+            <li><a href="index.html#products">Products</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="login.html" id="navLoginLink" class="btn-primary">Log In</a></li>
+        </ul>
+    </nav>
+
+    <div class="chat-container">
+        <div class="chat-card glass">
+            <h2>Live Community Lounge</h2>
+            <div id="chatMessages" class="chat-messages">
+                <!-- Messages will be populated here -->
+                <div style="text-align:center; padding: 20px; color: var(--text-muted);">Loading secure connection...
+                </div>
+            </div>
+            <form id="chatForm" class="chat-input-form">
+                <input type="text" id="chatInput" placeholder="Type a message... (Must be Logged In)" disabled required
+                    autocomplete="off">
+                <button type="submit" id="chatSubmit" class="submit-btn" disabled>Send</button>
+            </form>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+
+</html>
