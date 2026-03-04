@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     div.appendChild(author);
 
-                    if (msg.isAdmin) {
+                    if (msg.isAdmin || (msg.displayName && msg.displayName.toLowerCase() === 'khytt')) {
                         const adminBadge = document.createElement('span');
                         adminBadge.className = 'chat-admin-badge';
                         adminBadge.textContent = ' [Founder]';
