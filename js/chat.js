@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const author = document.createElement('span');
                 author.className = 'chat-author';
-                author.textContent = msg.email ? msg.email.split('@')[0] : 'Anonymous';
+                author.textContent = msg.displayName ? msg.displayName : (msg.email ? msg.email.split('@')[0] : 'Anonymous');
 
                 const text = document.createElement('span');
                 text.className = 'chat-text';
@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         text: text,
                         uid: currentUser.uid,
                         email: currentUser.email,
+                        displayName: currentUser.displayName || null,
                         createdAt: serverTimestamp()
                     });
                 } catch (error) {
