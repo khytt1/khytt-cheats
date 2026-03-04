@@ -24,14 +24,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const q = query(collection(db, "messages"), orderBy("createdAt", "desc"), limit(50));
-        onSnapshot(q, (snapshot) => {
-            chatMessages.innerHTML = '';
+
+        onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
+            // Rebuild the whole list smoothly
             const msgs = [];
             snapshot.forEach((doc) => {
-                msgs.push(doc.data());
+                const data = doc.data();
+                // If it's a local write, createdAt might be null temporarily.
+                // Give it a fake timestamp in the future so it drops to the bottom of the chat.
+                const timeStr = data.createdAt ? data.createdAt.toMillis() : Date.now() + 10000;
+                msgs.push({ time: timeStr, ...data, id: doc.id });
             });
-            msgs.reverse(); // Display oldest to newest
 
+            // Sort from oldest to newest based on the timestamp we just ensured exists
+            msgs.sort((a, b) => a.time - b.time);
+
+            chatMessages.innerHTML = '';
             msgs.forEach(msg => {
                 const div = document.createElement('div');
                 div.className = 'chat-message';
@@ -50,7 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 chatMessages.appendChild(div);
             });
+
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, (error) => {
+            console.error("Firebase Listener Error: ", error);
+            chatInput.placeholder = "Error connecting to secure server.";
         });
 
         chatForm.addEventListener('submit', async (e) => {
@@ -68,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 } catch (error) {
                     console.error("Error writing document: ", error);
+                    alert("Message failed to send. Check your Firestore Security Rules.");
                 }
             }
         });
