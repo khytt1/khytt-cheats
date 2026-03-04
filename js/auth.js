@@ -1,5 +1,5 @@
 import { auth } from './firebase-config.js';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     const authForm = document.getElementById('authForm');
@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const authSubmitBtn = document.getElementById('authSubmitBtn');
     const toggleAuthMode = document.getElementById('toggleAuthMode');
     const authStatus = document.getElementById('authStatus');
+    const nameGroup = document.getElementById('nameGroup');
+    const displayName = document.getElementById('displayName');
 
     let isLoginMode = true;
 
@@ -19,6 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleAuthMode.textContent = isLoginMode ? "Sign Up" : "Log In";
             // Update the text in the surrounding p tag safely
             toggleAuthMode.parentElement.childNodes[0].nodeValue = isLoginMode ? "Don't have an account? " : "Already have an account? ";
+
+            if (nameGroup) {
+                nameGroup.style.display = isLoginMode ? 'none' : 'block';
+                if (!isLoginMode) displayName.required = true;
+                else displayName.required = false;
+            }
+
             authStatus.style.display = 'none';
         });
     }
@@ -48,7 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 createUserWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
-                        window.location.href = "index.html";
+                        const name = displayName ? displayName.value : 'Anonymous';
+                        return updateProfile(userCredential.user, { displayName: name }).then(() => {
+                            window.location.href = "index.html";
+                        });
                     })
                     .catch((error) => {
                         authStatus.textContent = error.message;
