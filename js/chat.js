@@ -23,18 +23,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        const q = query(collection(db, "messages"), limit(50));
+        // Query all messages (no limit) and order chronologically
+        const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
 
         onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
-            // Rebuild the whole list smoothly
             const msgs = [];
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                msgs.push({ id: doc.id, ...data });
+                // To handle local writes before they hit the server, we use a future date placeholder
+                // This ensures your own new messages appear at the bottom instantly.
+                const timeStr = data.createdAt ? data.createdAt.toMillis() : Date.now() + 10000;
+                msgs.push({ time: timeStr, ...data, id: doc.id });
             });
 
-            // Reversing displays oldest messages at the top, newest at bottom
-            msgs.reverse();
+            // Re-enforce chronological sort just in case
+            msgs.sort((a, b) => a.time - b.time);
 
             chatMessages.innerHTML = '';
             msgs.forEach(msg => {
