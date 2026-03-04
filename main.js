@@ -128,34 +128,70 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Number Counter Animation
-    const counters = document.querySelectorAll('.stat-number');
-    const animateCounters = (entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const target = +entry.target.getAttribute('data-target');
-                let count = 0;
-                const increment = target / 100;
+    // Dynamic Stats Logic
+    const initDynamicStats = async () => {
+        // 1. Automatically calculate Days Undetected
+        const daysEl = document.getElementById('daysUndetectedCounter');
+        if (daysEl) {
+            const releaseDate = new Date("2026-02-17").getTime();
+            const now = new Date().getTime();
+            const daysDiff = Math.max(0, Math.floor((now - releaseDate) / (1000 * 60 * 60 * 24)));
+            daysEl.setAttribute('data-target', daysDiff);
+        }
 
-                const updateCount = () => {
-                    count += increment;
-                    if (count < target) {
-                        entry.target.innerText = Math.ceil(count).toLocaleString();
-                        requestAnimationFrame(updateCount);
-                    } else {
-                        entry.target.innerText = target.toLocaleString() + (target > 500 ? '+' : '');
-                    }
-                };
-                updateCount();
-                observer.unobserve(entry.target);
+        // 2. Fetch Live Active Users from Cloudflare
+        const activeUsersEl = document.getElementById('activeUsersCounter');
+        if (activeUsersEl) {
+            try {
+                // Force a fresh fetch bypassing edge cache
+                const res = await fetch(`https://khytt-analytics.mannycuckington.workers.dev/?t=${Date.now()}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    activeUsersEl.setAttribute('data-target', data.activeUsers || 0);
+                }
+            } catch (e) {
+                console.error("Analytics fetch failed:", e);
             }
-        });
+        }
+
+        // 3. Run the Number Counter Animations based on the newly injected data
+        const counters = document.querySelectorAll('.stat-number');
+        const animateCounters = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = +entry.target.getAttribute('data-target');
+                    let count = 0;
+                    // Fix increment for numbers smaller than 100 so it doesn't infinite loop at zero
+                    const increment = target / 100 > 0 ? target / 100 : 1;
+
+                    const updateCount = () => {
+                        count += increment;
+                        if (count < target) {
+                            entry.target.innerText = Math.ceil(count).toLocaleString();
+                            requestAnimationFrame(updateCount);
+                        } else {
+                            entry.target.innerText = target.toLocaleString() + (target >= 500 ? '+' : '');
+                        }
+                    };
+
+                    if (target > 0) {
+                        updateCount();
+                    } else {
+                        entry.target.innerText = "0";
+                    }
+
+                    observer.unobserve(entry.target);
+                }
+            });
+        };
+
+        if (counters.length > 0) {
+            const counterObserver = new IntersectionObserver(animateCounters, { threshold: 0.5 });
+            counters.forEach(counter => counterObserver.observe(counter));
+        }
     };
 
-    if (counters.length > 0) {
-        const counterObserver = new IntersectionObserver(animateCounters, { threshold: 0.5 });
-        counters.forEach(counter => counterObserver.observe(counter));
-    }
+    initDynamicStats();
 
     // Particle Background Integration
     const canvas = document.getElementById('particleCanvas');
