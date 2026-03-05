@@ -645,6 +645,24 @@ body {
     letter-spacing: 1px;
 }
 
+.chat-mod-badge {
+    color: var(--secondary);
+    font-weight: 800;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.chat-delete-btn {
+    transition: 0.2s;
+    margin-right: 5px;
+}
+
+.chat-delete-btn:hover {
+    color: #ff6b6b !important;
+    text-shadow: 0 0 8px rgba(255, 107, 107, 0.6);
+}
+
 .chat-input-form {
     display: flex;
     gap: 10px;

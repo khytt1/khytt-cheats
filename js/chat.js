@@ -67,15 +67,52 @@ document.addEventListener('DOMContentLoaded', () => {
                     const localTime = new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                     time.textContent = localTime;
 
-                    div.appendChild(author);
+                    const isCurrentUserAdminOrMod = currentUser && (
+                        (currentUser.displayName && currentUser.displayName.toLowerCase() === 'khytt') ||
+                        msg.isAdmin // Simplification for MVP assuming if they see admin messages they might be admin, but real check should be from a /me endpoint. We'll rely on the backend to reject unauthorized deletes.
+                    ); // In a real app we'd fetch the current user's role on load. We will just show the [x] if they are khytt for now, or we can just render the [x] for everyone and let the backend reject it. Let's render it if they are khytt to avoid clutter for normal users.
+
+                    const isViewerAdmin = currentUser && currentUser.displayName && currentUser.displayName.toLowerCase() === 'khytt';
+
+                    if (isViewerAdmin) {
+                        const deleteBtn = document.createElement('span');
+                        deleteBtn.className = 'chat-delete-btn';
+                        deleteBtn.innerHTML = ' &times; ';
+                        deleteBtn.style.color = '#ef4444';
+                        deleteBtn.style.cursor = 'pointer';
+                        deleteBtn.style.fontWeight = 'bold';
+                        deleteBtn.onclick = async () => {
+                            if (confirm("Delete this message?")) {
+                                try {
+                                    await fetch(CHAT_API + 'mod/delete', {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({
+                                            requesterUid: currentUser.uid,
+                                            requesterName: currentUser.displayName,
+                                            messageId: msg.id
+                                        })
+                                    });
+                                    syncMessages();
+                                } catch (e) { alert("Failed to delete"); }
+                            }
+                        };
+                        div.appendChild(deleteBtn);
+                    }
 
                     if (msg.isAdmin || (msg.displayName && msg.displayName.toLowerCase() === 'khytt')) {
                         const adminBadge = document.createElement('span');
                         adminBadge.className = 'chat-admin-badge';
-                        adminBadge.textContent = ' [Founder]';
+                        adminBadge.textContent = '[Founder] ';
                         div.appendChild(adminBadge);
+                    } else if (msg.isMod) {
+                        const modBadge = document.createElement('span');
+                        modBadge.className = 'chat-mod-badge';
+                        modBadge.textContent = '[Mod] ';
+                        div.appendChild(modBadge);
                     }
 
+                    div.appendChild(author);
                     div.appendChild(document.createTextNode(': '));
                     div.appendChild(text);
                     div.appendChild(time);
