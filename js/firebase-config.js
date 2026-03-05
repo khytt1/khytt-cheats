@@ -36,6 +36,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginLink.textContent = "Log In";
                 loginLink.href = "login.html";
             }
+
+            // Handle Download Button Logic globally
+            const downloadBtn = document.getElementById('downloadBtn');
+            if (downloadBtn) {
+                // Remove older event listeners by cloning
+                const newBtn = downloadBtn.cloneNode(true);
+                downloadBtn.parentNode.replaceChild(newBtn, downloadBtn);
+
+                if (user) {
+                    newBtn.textContent = newBtn.textContent.replace("Log in to ", "");
+                    newBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.open(newBtn.getAttribute('data-url'), '_blank');
+                    });
+                } else {
+                    newBtn.textContent = "Log in to Download";
+                    newBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        alert("You must be logged in to download files.");
+                        window.location.href = "login.html";
+                    });
+                }
+            }
         });
     }
 });

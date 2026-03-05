@@ -50,10 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const div = document.createElement('div');
                     div.className = 'chat-message';
 
-                    const author = document.createElement('span');
-                    author.className = 'chat-author';
-                    author.textContent = msg.displayName ? msg.displayName : (msg.email ? msg.email.split('@')[0] : 'Anonymous');
-
                     const text = document.createElement('span');
                     text.className = 'chat-text';
                     text.textContent = msg.text;
@@ -64,13 +60,33 @@ document.addEventListener('DOMContentLoaded', () => {
                     time.style.marginLeft = '10px';
 
                     // Convert Cloudflare server epoch time into the user's localized time
-                    const localTime = new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    time.textContent = localTime;
+                    // Create Flex Container for everything except time
+                    const headerRow = document.createElement('div');
+                    headerRow.style.display = 'flex';
+                    headerRow.style.alignItems = 'center';
+                    headerRow.style.gap = '8px';
+
+                    // Profile Picture
+                    const pfp = document.createElement('img');
+                    pfp.className = 'chat-pfp';
+                    pfp.src = msg.pfpUrl || 'https://i.imgur.com/6YGWwS9.png'; // Fallback
+                    pfp.onerror = () => { pfp.src = 'https://i.imgur.com/6YGWwS9.png'; }; // Handle broken links
+                    headerRow.appendChild(pfp);
+
+                    // Name as a clickable link
+                    const authorLink = document.createElement('a');
+                    authorLink.href = `profile.html?uid=${msg.uid}`;
+                    authorLink.className = 'chat-author-link';
+
+                    const author = document.createElement('span');
+                    author.className = 'chat-author';
+                    author.textContent = msg.displayName ? msg.displayName : (msg.email ? msg.email.split('@')[0] : 'Anonymous');
+                    authorLink.appendChild(author);
 
                     const isCurrentUserAdminOrMod = currentUser && (
                         (currentUser.displayName && currentUser.displayName.toLowerCase() === 'khytt') ||
-                        msg.isAdmin // Simplification for MVP assuming if they see admin messages they might be admin, but real check should be from a /me endpoint. We'll rely on the backend to reject unauthorized deletes.
-                    ); // In a real app we'd fetch the current user's role on load. We will just show the [x] if they are khytt for now, or we can just render the [x] for everyone and let the backend reject it. Let's render it if they are khytt to avoid clutter for normal users.
+                        msg.isAdmin
+                    );
 
                     const isViewerAdmin = currentUser && currentUser.displayName && currentUser.displayName.toLowerCase() === 'khytt';
 
@@ -97,25 +113,36 @@ document.addEventListener('DOMContentLoaded', () => {
                                 } catch (e) { alert("Failed to delete"); }
                             }
                         };
-                        div.appendChild(deleteBtn);
+                        headerRow.appendChild(deleteBtn);
                     }
 
                     if (msg.isAdmin || (msg.displayName && msg.displayName.toLowerCase() === 'khytt')) {
                         const adminBadge = document.createElement('span');
                         adminBadge.className = 'chat-admin-badge';
                         adminBadge.textContent = '[Founder] ';
-                        div.appendChild(adminBadge);
+                        headerRow.appendChild(adminBadge);
                     } else if (msg.isMod) {
                         const modBadge = document.createElement('span');
                         modBadge.className = 'chat-mod-badge';
                         modBadge.textContent = '[Mod] ';
-                        div.appendChild(modBadge);
+                        headerRow.appendChild(modBadge);
                     }
 
-                    div.appendChild(author);
-                    div.appendChild(document.createTextNode(': '));
-                    div.appendChild(text);
-                    div.appendChild(time);
+                    headerRow.appendChild(authorLink);
+
+                    const colon = document.createElement('span');
+                    colon.textContent = ': ';
+                    headerRow.appendChild(colon);
+
+                    div.appendChild(headerRow);
+
+                    // Message Text block
+                    const textContent = document.createElement('div');
+                    textContent.style.marginTop = '4px';
+                    textContent.appendChild(text);
+                    textContent.appendChild(time);
+
+                    div.appendChild(textContent);
 
                     chatMessages.appendChild(div);
                 });

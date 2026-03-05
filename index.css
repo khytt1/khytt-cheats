@@ -637,6 +637,25 @@ body {
     color: var(--text);
 }
 
+.chat-pfp {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--glass-border);
+}
+
+.chat-author-link {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.2s;
+}
+
+.chat-author-link:hover .chat-author {
+    color: var(--text-main);
+    text-decoration: underline;
+}
+
 .chat-admin-badge {
     color: var(--warning);
     font-weight: 800;
