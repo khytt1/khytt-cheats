@@ -4,7 +4,7 @@ const CHAT_API = "https://khytt-chat.mannycuckington.workers.dev/";
 
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const targetUid = urlParams.get('uid');
+    let targetUid = urlParams.get('uid');
 
     const loader = document.getElementById('profileLoader');
     const content = document.getElementById('profileContent');
@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modal Events
     editBtn.addEventListener('click', () => {
         editPfpInput.value = pfpImg.src;
+        document.getElementById('editNameInput').value = document.getElementById('pName').textContent;
         editModal.classList.add('active');
     });
 
@@ -100,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentUser) return;
 
         const newPfp = editPfpInput.value.trim();
+        const newName = document.getElementById('editNameInput').value.trim();
         saveProfileBtn.disabled = true;
         saveProfileBtn.textContent = "Saving...";
 
@@ -110,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     uid: currentUser.uid,
                     pfpUrl: newPfp,
-                    displayName: currentUser.displayName // Keep current name for now
+                    displayName: newName
                 })
             });
 
@@ -118,8 +120,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (res.error) {
                 alert("Error: " + res.error);
+                if (response.status === 409) {
+                    // Username taken, focus input
+                    document.getElementById('editNameInput').focus();
+                    saveProfileBtn.disabled = false;
+                    saveProfileBtn.textContent = "Save Changes";
+                    return;
+                }
             } else {
                 pfpImg.src = newPfp;
+                document.getElementById('pName').textContent = newName;
+
+                // Also update the firebase profile so it stays synced
+                import("https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js").then((mod) => {
+                    mod.updateProfile(currentUser, { displayName: newName });
+                });
+
                 editModal.classList.remove('active');
             }
         } catch (e) {
